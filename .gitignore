@@ -1,3 +1,4 @@
 config.env
 etc-pihole
 etc-dnsmasq.d
+unbound/root.hints
