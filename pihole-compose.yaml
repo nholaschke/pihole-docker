@@ -12,14 +12,26 @@ services:
     volumes:
       - './etc-pihole:/etc/pihole'
       - './etc-dnsmasq.d:/etc/dnsmasq.d'
+      - /etc/localtime:/etc/localtime:ro
     cap_add:
       - NET_ADMIN
     dns:
       - 127.0.0.1
       - 1.1.1.1
+    depends_on:
+      - unbound
     healthcheck:
       test: ["CMD", "dig", "@127.0.0.1", "google.com"]
       interval: 30s
       timeout: 10s
       retries: 3
+    restart: unless-stopped
+  unbound:
+    container_name: unbound
+    image: klutchell/unbound:latest
+    volumes:
+      - ./unbound/unbound.conf:/opt/unbound/etc/unbound/unbound.conf
+      - ./unbound/root.hints:/opt/unbound/etc/unbound/root.hints
+      - ./unbound/update-root-hints.sh:/opt/unbound/update-root-hints.sh
+    entrypoint: ["/bin/sh", "-c", "/opt/unbound/update-root-hints.sh && unbound -d -c /opt/unbound/etc/unbound/unbound.conf"]
     restart: unless-stopped
