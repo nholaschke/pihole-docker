@@ -33,5 +33,4 @@ services:
       - ./unbound/unbound.conf:/opt/unbound/etc/unbound/unbound.conf
       - ./unbound/root.hints:/opt/unbound/etc/unbound/root.hints
       - ./unbound/update-root-hints.sh:/opt/unbound/update-root-hints.sh
-    entrypoint: ["/bin/sh", "-c", "/opt/unbound/update-root-hints.sh && unbound -d -c /opt/unbound/etc/unbound/unbound.conf"]
     restart: unless-stopped
